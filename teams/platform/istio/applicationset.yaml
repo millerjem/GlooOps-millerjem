@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: gloo-gateways
+  namespace: argocd
+spec:
+  generators:
+  - clusters: {}
+  template:
+    metadata:
+      name: 'istio-lifecycle-{{name}}'
+    spec:
+      project: gloo-mesh
+      source:
+        repoURL: 'https://github.com/millerjem/GlooOps-millerjem'
+        targetRevision: HEAD
+        path: 'teams/platform/istio/{{name}}'
+      destination:
+        name: '{{name}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
