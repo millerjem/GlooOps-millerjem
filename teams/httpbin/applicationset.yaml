@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: httpbin-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: httpbin
+  source:
+    repoURL: https://github.com/millerjem/GlooOps-millerjem
+    targetRevision: main
+    path: teams/httpbin/base/
+  destination:
+    name: cluster1
+    namespace: httpbin
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 2
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+    syncOptions:
+      - CreateNamespace=true
